@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">Daily Weather Assistant</string>
+
+    <string name="about_app">About App</string>
+    <string name="back">Back</string>
+
+    <string name="failed_weather">Failed to load weather</string>
+
+    <string name="about_title">Daily Weather Assistant</string>
+    <string name="about_description">Shows current weather in Oulu</string>
+
+    <string name="temperature_unit">°C</string>
+    <string name="about_button">About App</string>
+    <string name="back_button">Back</string>
+</resources>
