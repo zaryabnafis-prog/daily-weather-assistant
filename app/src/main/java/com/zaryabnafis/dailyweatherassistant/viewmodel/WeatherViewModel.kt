@@ -17,13 +17,14 @@ class WeatherViewModel : ViewModel() {
     var isLoading = mutableStateOf(false)
     var error = mutableStateOf("")
 
-    fun loadWeather() {
+
+    fun loadWeather(city: String) {
         viewModelScope.launch {
             try {
                 isLoading.value = true
                 error.value = ""
 
-                val weather = repository.getWeather()
+                val weather = repository.getWeather(city)
 
                 cityName.value = weather.location.name
                 temperature.value = "${weather.current.temp_c} °C"

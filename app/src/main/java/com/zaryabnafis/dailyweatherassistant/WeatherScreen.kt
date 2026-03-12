@@ -3,6 +3,7 @@ package com.zaryabnafis.dailyweatherassistant
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -16,11 +17,10 @@ import com.zaryabnafis.dailyweatherassistant.viewmodel.WeatherViewModel
 fun WeatherScreen(
     onAboutClick: () -> Unit
 ) {
+
     val vm: WeatherViewModel = viewModel()
 
-    LaunchedEffect(Unit) {
-        vm.loadWeather()
-    }
+    var city by rememberSaveable { mutableStateOf("") }
 
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -28,6 +28,7 @@ fun WeatherScreen(
     ) {
 
         when {
+
             vm.isLoading.value -> {
                 CircularProgressIndicator()
             }
@@ -37,29 +38,82 @@ fun WeatherScreen(
             }
 
             else -> {
+
                 Column(
-                    horizontalAlignment = Alignment.CenterHorizontally
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.padding(16.dp)
                 ) {
 
-                    Text(
-                        text = vm.cityName.value,
-                        fontSize = 24.sp
+                    TextField(
+                        value = city,
+                        onValueChange = { city = it },
+                        label = { Text("Enter city") }
                     )
 
-                    Text(
-                        text = vm.temperature.value,
-                        fontSize = 32.sp
-                    )
+                    Spacer(modifier = Modifier.height(16.dp))
 
-                    Text(
-                        text = vm.condition.value
-                    )
+                    Button(
+                        onClick = {
+                            if (city.isNotBlank()) {
+                                vm.loadWeather(city)
+                            }
+                        }
+                    ) {
+                        Text("Search")
+                    }
 
-                    AsyncImage(
-                        model = vm.iconUrl.value,
-                        contentDescription = null,
-                        modifier = Modifier.size(120.dp)
-                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    Button(
+                        onClick = {
+                            if (city.isNotBlank()) {
+                                vm.loadWeather(city)
+                            }
+                        }
+                    ) {
+                        Text("Refresh")
+                    }
+
+                    Spacer(modifier = Modifier.height(24.dp))
+
+                    if (city.isBlank()) {
+                        Text(
+                            text = "Please enter a city",
+                            color = MaterialTheme.colorScheme.error
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(24.dp))
+
+                    if (vm.cityName.value.isEmpty()) {
+
+                        Text(
+                            text = "Search for a city to see the current weather",
+                            fontSize = 18.sp
+                        )
+
+                    } else {
+
+                        Text(
+                            text = vm.cityName.value,
+                            fontSize = 24.sp
+                        )
+
+                        Text(
+                            text = vm.temperature.value,
+                            fontSize = 32.sp
+                        )
+
+                        Text(
+                            text = vm.condition.value
+                        )
+
+                        AsyncImage(
+                            model = vm.iconUrl.value,
+                            contentDescription = null,
+                            modifier = Modifier.size(120.dp)
+                        )
+                    }
 
                     Spacer(modifier = Modifier.height(24.dp))
 

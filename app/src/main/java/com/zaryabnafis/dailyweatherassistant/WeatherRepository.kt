@@ -7,10 +7,10 @@ class WeatherRepository {
 
     private val apiKey = "3660e1bcc4f34080a54162040260303"
 
-    suspend fun getWeather(): WeatherResponse {
+    suspend fun getWeather(city: String): WeatherResponse {
         return RetrofitInstance.api.getWeather(
             apiKey = apiKey,
-            city = "Oulu"
+            city = city
         )
     }
 }

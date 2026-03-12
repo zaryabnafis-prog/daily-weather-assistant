@@ -1,31 +1,38 @@
 package com.zaryabnafis.dailyweatherassistant
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 
 @Composable
-fun AboutScreen(onBackClick: () -> Unit) {
+fun AboutScreen(
+    onBackClick: () -> Unit
+) {
 
-    Column(
+    Box(
         modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
+        contentAlignment = Alignment.Center
     ) {
 
-        Text(text = stringResource(R.string.about_title))
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
 
-        Text(text = stringResource(R.string.about_description))
+            Text("Daily Weather Assistant")
 
-        Button(onClick = onBackClick) {
-            Text(text = stringResource(R.string.back_button))
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Text("Shows current weather for any city")
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            Button(onClick = onBackClick) {
+                Text("Back")
+            }
         }
-
     }
 }
