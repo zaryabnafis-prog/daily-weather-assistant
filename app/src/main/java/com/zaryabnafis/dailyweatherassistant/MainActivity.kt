@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import com.zaryabnafis.dailyweatherassistant.ui.theme.DailyWeatherAssistantTheme
 
 class MainActivity : ComponentActivity() {
@@ -14,7 +15,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             DailyWeatherAssistantTheme {
 
-                var showAbout by remember { mutableStateOf(false) }
+                var showAbout by rememberSaveable { mutableStateOf(false) }
 
                 if (showAbout) {
                     AboutScreen(onBackClick = { showAbout = false })

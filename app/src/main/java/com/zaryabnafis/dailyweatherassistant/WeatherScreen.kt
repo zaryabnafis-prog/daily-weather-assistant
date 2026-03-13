@@ -13,112 +13,145 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.zaryabnafis.dailyweatherassistant.viewmodel.WeatherViewModel
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WeatherScreen(
     onAboutClick: () -> Unit
 ) {
 
     val vm: WeatherViewModel = viewModel()
-
     var city by rememberSaveable { mutableStateOf("") }
 
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text("Daily Weather Assistant")
+                }
+            )
+        }
+    ) { paddingValues ->
 
-        when {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues),
+            contentAlignment = Alignment.TopCenter
+        ) {
 
-            vm.isLoading.value -> {
-                CircularProgressIndicator()
-            }
+            when {
 
-            vm.error.value.isNotEmpty() -> {
-                Text(vm.error.value)
-            }
+                vm.isLoading.value -> {
+                    CircularProgressIndicator()
+                }
 
-            else -> {
+                vm.error.value.isNotEmpty() -> {
+                    Text(vm.error.value)
+                }
 
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.padding(16.dp)
-                ) {
+                else -> {
 
-                    TextField(
-                        value = city,
-                        onValueChange = { city = it },
-                        label = { Text("Enter city") }
-                    )
-
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    Button(
-                        onClick = {
-                            if (city.isNotBlank()) {
-                                vm.loadWeather(city)
-                            }
-                        }
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier
+                            .padding(16.dp)
+                            .fillMaxWidth()
                     ) {
-                        Text("Search")
-                    }
 
-                    Spacer(modifier = Modifier.height(16.dp))
+                        if (vm.cityName.value.isNotEmpty()) {
 
-                    Button(
-                        onClick = {
-                            if (city.isNotBlank()) {
-                                vm.loadWeather(city)
+                            Card(
+                                modifier = Modifier.fillMaxWidth(),
+                                elevation = CardDefaults.cardElevation(defaultElevation = 6.dp)
+                            ) {
+
+                                Column(
+                                    horizontalAlignment = Alignment.CenterHorizontally,
+                                    modifier = Modifier.padding(24.dp)
+                                ) {
+
+                                    Text(
+                                        text = vm.cityName.value,
+                                        fontSize = 24.sp
+                                    )
+
+                                    Spacer(modifier = Modifier.height(8.dp))
+
+                                    Text(
+                                        text = vm.temperature.value,
+                                        fontSize = 32.sp
+                                    )
+
+                                    Spacer(modifier = Modifier.height(8.dp))
+
+                                    Text(
+                                        text = vm.condition.value
+                                    )
+
+                                    Spacer(modifier = Modifier.height(16.dp))
+
+                                    AsyncImage(
+                                        model = vm.iconUrl.value,
+                                        contentDescription = null,
+                                        modifier = Modifier.size(120.dp)
+                                    )
+                                }
                             }
+
+                            Spacer(modifier = Modifier.height(24.dp))
                         }
-                    ) {
-                        Text("Refresh")
-                    }
 
-                    Spacer(modifier = Modifier.height(24.dp))
-
-                    if (city.isBlank()) {
-                        Text(
-                            text = "Please enter a city",
-                            color = MaterialTheme.colorScheme.error
-                        )
-                    }
-
-                    Spacer(modifier = Modifier.height(24.dp))
-
-                    if (vm.cityName.value.isEmpty()) {
-
-                        Text(
-                            text = "Search for a city to see the current weather",
-                            fontSize = 18.sp
+                        TextField(
+                            value = city,
+                            onValueChange = { city = it },
+                            label = { Text("Enter city") },
+                            modifier = Modifier.fillMaxWidth()
                         )
 
-                    } else {
+                        Spacer(modifier = Modifier.height(16.dp))
 
-                        Text(
-                            text = vm.cityName.value,
-                            fontSize = 24.sp
-                        )
+                        Button(
+                            onClick = {
+                                if (city.isNotBlank()) {
+                                    vm.loadWeather(city)
+                                }
+                            },
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text("Search")
+                        }
 
-                        Text(
-                            text = vm.temperature.value,
-                            fontSize = 32.sp
-                        )
+                        Spacer(modifier = Modifier.height(12.dp))
 
-                        Text(
-                            text = vm.condition.value
-                        )
+                        Button(
+                            onClick = {
+                                if (city.isNotBlank()) {
+                                    vm.loadWeather(city)
+                                }
+                            },
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text("Refresh")
+                        }
 
-                        AsyncImage(
-                            model = vm.iconUrl.value,
-                            contentDescription = null,
-                            modifier = Modifier.size(120.dp)
-                        )
-                    }
+                        if (city.isBlank()) {
 
-                    Spacer(modifier = Modifier.height(24.dp))
+                            Spacer(modifier = Modifier.height(12.dp))
 
-                    Button(onClick = onAboutClick) {
-                        Text(text = stringResource(R.string.about_button))
+                            Text(
+                                text = "Please enter a city",
+                                color = MaterialTheme.colorScheme.error
+                            )
+                        }
+
+                        Spacer(modifier = Modifier.height(24.dp))
+
+                        Button(
+                            onClick = onAboutClick,
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text(text = stringResource(R.string.about_button))
+                        }
                     }
                 }
             }
